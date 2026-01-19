@@ -160,7 +160,7 @@ with col2:
 
 
     # 🎉 CONFETTI
-   if player_a_prob >= 0.70:
+if player_a_prob >= 0.70:
     st.success("🔥 Player A is a strong favorite!")
     st.balloons()
 elif player_a_prob <= 0.30:
