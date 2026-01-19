@@ -1,4 +1,4 @@
-import streamlit as st
+update in this:import streamlit as st
 import joblib
 import pandas as pd
 import plotly.graph_objects as go
@@ -115,9 +115,6 @@ if st.button("🔮 Predict Match Outcome"):
     player_a_prob = probs[1] * 100
     player_b_prob = probs[0] * 100
 
-    # ===============================
-    # RESULT
-    # ===============================
     st.markdown(
         f"""
         <h2>🏆 Prediction Result</h2>
@@ -138,9 +135,6 @@ if st.button("🔮 Predict Match Outcome"):
     else:
         st.info("⚖️ This match looks evenly balanced")
 
-    # ===============================
-    # GAUGE CHART
-    # ===============================
     fig = go.Figure(go.Indicator(
         mode="gauge+number",
         value=player_a_prob,
@@ -149,41 +143,6 @@ if st.button("🔮 Predict Match Outcome"):
     ))
 
     st.plotly_chart(fig, use_container_width=True)
-
-    # ===============================
-    # FEATURE IMPORTANCE (NEW FEATURE)
-    # ===============================
-    st.subheader("🧠 Why did the model predict this?")
-
-    feature_names = X.columns
-    importances = model.feature_importances_
-
-    fi_df = pd.DataFrame({
-        "Feature": feature_names,
-        "Importance": importances
-    }).sort_values(by="Importance", ascending=True)
-
-    fig_fi = go.Figure(go.Bar(
-        x=fi_df["Importance"],
-        y=fi_df["Feature"],
-        orientation="h",
-        marker=dict(
-            color=fi_df["Importance"],
-            colorscale="Turbo"
-        )
-    ))
-
-    fig_fi.update_layout(
-        height=350,
-        xaxis_title="Impact on Prediction",
-        yaxis_title="Feature",
-        template="plotly_dark"
-    )
-
-    st.plotly_chart(fig_fi, use_container_width=True)
-
-    top_feature = fi_df.iloc[-1]["Feature"]
-    st.info(f"🔑 Key deciding factor: **{top_feature}**")
 
 # ===============================
 # FOOTER
