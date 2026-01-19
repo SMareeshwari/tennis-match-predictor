@@ -17,27 +17,82 @@ st.set_page_config(
 # ===============================
 st.markdown("""
 <style>
+/* ===== GLOBAL BACKGROUND ===== */
 .stApp {
     background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-    color: white;
+    color: #e8f1f5;
     font-family: 'Segoe UI', sans-serif;
 }
-h1, h2, h3 { color: #00ffcc; text-align: center; }
-.card {
-    background: rgba(255,255,255,0.08);
-    padding: 25px;
-    border-radius: 18px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-    margin-bottom: 25px;
+
+/* ===== TITLES ===== */
+h1 {
+    color: #00ffd5;
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 800;
 }
-.stButton > button {
-    background: linear-gradient(90deg, #00ffcc, #00ccff);
-    color: black;
-    border-radius: 30px;
-    padding: 14px 34px;
+
+h2 {
+    color: #ffd166;
+    text-align: center;
+    font-weight: 700;
+}
+
+h3 {
+    color: #ff9f1c;
+    font-weight: 600;
+}
+
+/* ===== SUBHEADERS / LABELS ===== */
+label, .css-1cpxqw2 {
+    color: #c7f9ff !important;
+    font-weight: 600;
+}
+
+/* ===== SLIDER VALUE COLOR ===== */
+.css-1p05t8e {
+    color: #00ffab !important;
     font-weight: bold;
 }
-footer, header {visibility: hidden;}
+
+/* ===== BUTTON ===== */
+.stButton>button {
+    background: linear-gradient(90deg, #00f5d4, #00bbf9);
+    color: black;
+    font-size: 18px;
+    padding: 0.6em 2em;
+    border-radius: 30px;
+    font-weight: 700;
+    border: none;
+    box-shadow: 0px 0px 15px rgba(0,255,213,0.6);
+    transition: all 0.3s ease;
+}
+
+.stButton>button:hover {
+    background: linear-gradient(90deg, #ffd166, #ef476f);
+    color: black;
+    transform: scale(1.05);
+}
+
+/* ===== METRICS / PROBABILITY TEXT ===== */
+.metric-value {
+    color: #06d6a0 !important;
+    font-size: 36px !important;
+    font-weight: 800;
+}
+
+/* ===== SUCCESS MESSAGE ===== */
+.stAlert-success {
+    background: linear-gradient(90deg, #06d6a0, #1b9aaa);
+    color: black;
+    font-weight: bold;
+    border-radius: 12px;
+}
+
+/* ===== PROGRESS BAR ===== */
+.stProgress > div > div {
+    background: linear-gradient(90deg, #00f5d4, #ffd166);
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -59,12 +114,9 @@ except Exception as e:
 # ===============================
 # TITLE
 # ===============================
-st.markdown("""
-<h1>🎾 ATP Tennis Match Predictor</h1>
-<p style="text-align:center; color:#ccc;">
-AI-powered tennis match outcome prediction
-</p>
-""", unsafe_allow_html=True)
+st.markdown("<h1>🎾 ATP Tennis Match Predictor</h1>", unsafe_allow_html=True)
+st.markdown("<h2>AI-Powered Match Outcome Prediction</h2>", unsafe_allow_html=True)
+
 
 # ===============================
 # INPUTS
@@ -105,24 +157,27 @@ if st.button("🔮 Predict Match Outcome"):
     player_b_prob = probs[0]
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.subheader("🏆 Prediction Result")
+   st.markdown(
+    f"""
+    <h2>🏆 Prediction Result</h2>
+    <p style="color:#06d6a0;font-size:32px;font-weight:800;">
+        Player A Win Probability: {prob_a:.2f}%
+    </p>
+    <p style="color:#ef476f;font-size:28px;font-weight:700;">
+        Player B Win Probability: {prob_b:.2f}%
+    </p>
+    """,
+    unsafe_allow_html=True
+)
 
-    col1, col2 = st.columns(2)
-    with col1:
-        st.metric("🏆 Player A Win Probability", f"{player_a_prob*100:.2f}%")
-        st.progress(player_a_prob)
 
-    with col2:
-        st.metric("⚡ Player B Win Probability", f"{player_b_prob*100:.2f}%")
-        st.progress(player_b_prob)
+    if prob_a > 65:
+    st.success("🔥 Player A is a STRONG FAVORITE!")
+elif prob_b > 65:
+    st.success("⚡ Player B is a STRONG FAVORITE!")
+else:
+    st.info("⚖️ This match looks evenly balanced")
 
-    if player_a_prob >= 0.7:
-        st.success("🔥 Player A is a strong favorite!")
-        st.balloons()
-    elif player_a_prob <= 0.3:
-        st.warning("⚡ Player B could cause an upset!")
-    else:
-        st.info("⚖️ This looks like a close match!")
 
     fig = go.Figure(go.Indicator(
         mode="gauge+number",
@@ -147,3 +202,4 @@ st.markdown("""
 </ul>
 </div>
 """, unsafe_allow_html=True)
+
