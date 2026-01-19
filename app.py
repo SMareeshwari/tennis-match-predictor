@@ -76,18 +76,16 @@ footer, header {visibility: hidden;}
 """, unsafe_allow_html=True)
 
 # ===============================
-# LOAD MODEL (SAFE PATH)
+# LOAD MODEL (STREAMLIT SAFE)
 # ===============================
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_PATH = os.path.join("models", "random_forest.pkl")
-
+MODEL_PATH = os.path.join(BASE_DIR, "random_forest.pkl")
 
 if not os.path.exists(MODEL_PATH):
-    st.error("❌ Model file not found")
+    st.error("❌ Model file not found. Ensure random_forest.pkl is in the repository root.")
     st.stop()
 
 model = joblib.load(MODEL_PATH)
-
 
 # ===============================
 # TITLE
@@ -116,6 +114,7 @@ with col2:
     loser_rank = st.slider("Player B Rank", 1, 500, 35)
 
 best_of = st.selectbox("Match Format (Best of)", [3, 5])
+
 st.markdown('</div>', unsafe_allow_html=True)
 
 # ===============================
@@ -142,32 +141,24 @@ if st.button("🔮 Predict Match Outcome"):
     # ===============================
     st.markdown('<div class="card glow">', unsafe_allow_html=True)
     st.subheader("🏆 Prediction Result")
+
     col1, col2 = st.columns(2)
 
-with col1:
-    st.metric(
-        "🏆 Player A Win Probability",
-        f"{player_a_prob * 100:.2f}%"
-    )
-    st.progress(player_a_prob)
+    with col1:
+        st.metric("🏆 Player A Win Probability", f"{player_a_prob*100:.2f}%")
+        st.progress(player_a_prob)
 
-with col2:
-    st.metric(
-        "⚡ Player B Win Probability",
-        f"{player_b_prob * 100:.2f}%"
-    )
-    st.progress(player_b_prob)
+    with col2:
+        st.metric("⚡ Player B Win Probability", f"{player_b_prob*100:.2f}%")
+        st.progress(player_b_prob)
 
-
-    # 🎉 CONFETTI
-if player_a_prob >= 0.70:
-    st.success("🔥 Player A is a strong favorite!")
-    st.balloons()
-elif player_a_prob <= 0.30:
-    st.warning("⚡ Player B could cause an upset!")
-else:
-    st.info("⚖️ This looks like a close match!")
-
+    if player_a_prob >= 0.70:
+        st.success("🔥 Player A is a strong favorite!")
+        st.balloons()
+    elif player_a_prob <= 0.30:
+        st.warning("⚡ Player B could cause an upset!")
+    else:
+        st.info("⚖️ This looks like a close match!")
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -177,7 +168,6 @@ else:
     fig = go.Figure(go.Indicator(
         mode="gauge+number",
         value=player_a_prob * 100,
-
         title={"text": "Win Probability (%)"},
         gauge={
             "axis": {"range": [0, 100]},
