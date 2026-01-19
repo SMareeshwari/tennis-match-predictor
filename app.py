@@ -79,7 +79,8 @@ footer, header {visibility: hidden;}
 # LOAD MODEL (SAFE PATH)
 # ===============================
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_PATH = os.path.join("models", "random_forest.pkl")
+MODEL_PATH = "random_forest.pkl"
+
 
 
 if not os.path.exists(MODEL_PATH):
@@ -198,3 +199,4 @@ st.markdown("""
 </ul>
 </div>
 """, unsafe_allow_html=True)
+
